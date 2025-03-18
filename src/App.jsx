@@ -4,13 +4,19 @@ import { MoviesList } from './components/MoviesList';
 import moviesFromServer from './api/movies.json';
 
 export const App = () => {
-  const [query, setQuery] = useState('');
-  const lowerQuery = query.toLowerCase();
+  const [searchQuery, setSearchQuery] = useState('');
+  const lowerQuery = searchQuery.toLowerCase();
 
-  const visibleMovies = moviesFromServer.filter(
+  const lowercasedMovies = moviesFromServer.map(movie => ({
+    ...movie,
+    lowercasedTitle: movie.title.toLowerCase(),
+    lowercasedDescription: movie.description.toLowerCase(),
+  }));
+
+  const visibleMovies = lowercasedMovies.filter(
     movie =>
-      movie.title.toLowerCase().includes(lowerQuery) ||
-      movie.description.toLocaleLowerCase().includes(lowerQuery),
+      movie.lowercasedTitle.includes(lowerQuery) ||
+      movie.lowercasedDescription.includes(lowerQuery),
   );
 
   return (
@@ -29,7 +35,7 @@ export const App = () => {
                 id="search-query"
                 className="input"
                 placeholder="Type search word"
-                onChange={event => setQuery(event.target.value.trim())}
+                onChange={event => setSearchQuery(event.target.value.trim())}
               />
             </div>
           </div>
